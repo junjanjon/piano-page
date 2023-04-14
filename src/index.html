@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ピアノ</title>
+    <style>
+        .key {
+            float: left;
+            border-bottom: 2px solid black;
+            border-top: 2px solid black;
+            border-left: 2px solid black;
+            position: relative;
+        }
+        .last-key {
+            border-right: 2px solid black;
+        }
+        .white {
+            width: 50px;
+            height: 150px;
+            margin: 0px;
+            z-index: 0;
+        }
+        .black {
+            background-color: black;
+            color: white;
+            width: 28px;
+            height: 100px;
+            margin: 0px -17px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1>ピアノ Piano</h1>
+    <p>PCキーボードの "F" が "ド" で右に行くほど レ,ミ, ファ, ソ, ラ, シ となります。</p>
+    <p>The "F" on the PC keyboard is "C" and the further right you go, the more "D", "E", "F", "G", "A" and "B" you get.</p>
+    <p>黒鍵は対応していません。</p>
+    <p>Black keys are not supported.</p>
+</div>
+<div>
+<div class="key white" onclick="play('c')"></div>
+<div class="key black" onclick="play('cs')"></div>
+<div class="key white" onclick="play('d')"></div>
+<div class="key black" onclick="play('ds')"></div>
+<div class="key white" onclick="play('e')"></div>
+<div class="key white" onclick="play('f')"></div>
+<div class="key black" onclick="play('fs')"></div>
+<div class="key white" onclick="play('g')"></div>
+<div class="key black" onclick="play('gs')"></div>
+<div class="key white" onclick="play('a')"></div>
+<div class="key black" onclick="play('as')"></div>
+<div class="key white last-key" onclick="play('b')"></div>
+</div>
+<script>
+    const noteKeys = ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
+    const keyboardKeys = ['f', 'g', 'h', 'j', 'k', 'l', ';'];
+
+    function play(note) {
+      try {
+        const noteIndex = noteKeys.indexOf(note);
+        if (noteIndex < 0) {
+          throw new Error('note not found');
+        }
+        const audio = new Audio(`notes/${note}.mp3`);
+        audio.play();
+        const keyElement = document.body.getElementsByClassName('white')[noteIndex];
+        keyElement.style.backgroundColor = 'red';
+        audio.addEventListener('ended', () => {
+          keyElement.style.backgroundColor = 'white';
+          audio.remove();
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      const { key } = event;
+      const note = keyboardKeys.indexOf(key);
+      if (note >= 0) {
+        play(noteKeys[note]);
+      }
+    });
+</script>
+</body>
+</html>
